@@ -6,6 +6,5 @@ AWS Copilot makes it just as easy to **build** a monolith as several microservic
 * [01-getting-started](https://github.com/efekarakus/day2-with-copilot/tree/01-getting-started)
 * [02-alias](https://github.com/efekarakus/day2-with-copilot/tree/02-alias)
 * [03-backend-service](https://github.com/efekarakus/day2-with-copilot/tree/03-backend-service)
-
-Once you have built and deployed your application, Copilot provides a command to help you release your services with a continuous delivery pipeline:
-
+* [04-secrets-and-envvars](https://github.com/efekarakus/day2-with-copilot/tree/04-secrets-and-envvars)
+* [05-addons](https://github.com/efekarakus/day2-with-copilot/tree/05-addons)
