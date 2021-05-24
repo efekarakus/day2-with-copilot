@@ -4,6 +4,7 @@ just getting started with a containerized application on AWS.
 
 AWS Copilot makes it just as easy to **build** a monolith as several microservices on Amazon ECS, AWS Fargate or AWS App Runner. The following branches give an overview of available features for building a production-ready application:
 * [01-getting-started](https://github.com/efekarakus/day2-with-copilot/tree/01-getting-started)
+* [02-alias](https://github.com/efekarakus/day2-with-copilot/tree/02-alias)
 
 Once you have built and deployed your application, Copilot provides a command to help you release your services with a continuous delivery pipeline:
 
