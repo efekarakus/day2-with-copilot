@@ -1,0 +1,69 @@
+Parameters:
+  App:
+    Type: String
+    Description: Your application's name.
+  Env:
+    Type: String
+    Description: The environment name your service, job, or workflow is being deployed to.
+  Name:
+    Type: String
+    Description: The name of the service, job, or workflow being deployed.
+Resources:
+  products:
+    Metadata:
+      'aws:copilot:description': 'An Amazon DynamoDB table for products'
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${App}-${Env}-${Name}-products
+      AttributeDefinitions:
+        - AttributeName: ProductID
+          AttributeType: "S"
+        - AttributeName: Name
+          AttributeType: "S"
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: ProductID
+          KeyType: HASH
+        - AttributeName: Name
+          KeyType: RANGE
+
+  productsAccessPolicy:
+    Metadata:
+      'aws:copilot:description': 'An IAM ManagedPolicy for your service to access the products db'
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: !Sub
+        - Grants CRUD access to the Dynamo DB table ${Table}
+        - { Table: !Ref products }
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: DDBActions
+            Effect: Allow
+            Action:
+              - dynamodb:BatchGet*
+              - dynamodb:DescribeStream
+              - dynamodb:DescribeTable
+              - dynamodb:Get*
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:BatchWrite*
+              - dynamodb:Create*
+              - dynamodb:Delete*
+              - dynamodb:Update*
+              - dynamodb:PutItem
+            Resource: !Sub ${ products.Arn}
+          - Sid: DDBLSIActions
+            Action:
+              - dynamodb:Query
+              - dynamodb:Scan
+            Effect: Allow
+            Resource: !Sub ${ products.Arn}/index/*
+
+Outputs:
+  productsName:
+    Description: "The name of this DynamoDB."
+    Value: !Ref products
+  productsAccessPolicy:
+    Description: "The IAM::ManagedPolicy to attach to the task role."
+    Value: !Ref productsAccessPolicy

@@ -1,27 +1,32 @@
-# Injecting secrets and environment variables
+# Adding databases and more!
 
-Now that we have decoupled our microservices, we might want our "backend" service to communicate with an already existing database.  
-In this section, we'll see how we can create secrets and inject environment variables with Copilot.
+The final piece in evolving our applications is creating storage or eventbus components.
+In the previous section [04-secrets-and-envars](https://github.com/efekarakus/day2-with-copilot/tree/04-secrets-and-envvars), we saw how to integrate with existing databases. In this section, we'll see how to create ones with AWS Copilot.  
+To learn more: https://aws.github.io/copilot-cli/docs/developing/additional-aws-resources/
 
-### Step 1: Creating a secret
-For example, if you'd like to inject an API TOKEN or an existing RDS password. You can just run:
+### Step 1: Creating a DynamoDB table
+Copilot provides easy creation of certain types of storage components: Aurora Serverless database, DynamoDB database, S3 bucket. Just run:
 ```
-$ copilot secret init
+copilot storage init
 ```
-The command will prompt you for the name of your secret and a value for each environment.
-
-### Step 2: Update your manifest
-Once the secret is created, you can update your manifest to inject the secret or any other environment variables:
+In the generated CloudFormation template, you'll see:
 ```yaml
-# in copilot/backend/manifest.yml
-variables:
-  LOG_LEVEL: info
-secrets: 
-  MY_RDS_PASSWORD: /copilot/coffeeshop/test-ohio/secrets/MyRDSPassword
+Outputs:
+  productsName:
+    Description: "The name of this DynamoDB."
+    Value: !Ref products
+  productsAccessPolicy:
+    Description: "The IAM::ManagedPolicy to attach to the task role."
+    Value: !Ref productsAccessPolicy
 ```
 
-### Step 3: Deploy your backend service
+Through these outputs, Copilot understand whether it needs to add additional permissions to the task role, inject environment variables or secrets, or finally attach an additional security group.
+
+### Step 2: Define your own addon template
+In `copilot/backend/addons/redis.yml`, we've defined a custom redis cluster. Through, the outputs of the cloudformation template, Copilot will automatically add the additional security group to the ECS service.
+
+### Step 3: Deploy
 ```
 $ copilot deploy
 ```
-The environment variables `LOG_LEVEL` and `MY_RDS_PASSWORD` will be injected into our container!
+Run `deploy` to create the addon templates!
