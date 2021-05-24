@@ -58,5 +58,8 @@ app.post(['/inventory', '/inventory/'], (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Backend listening at ${port}`)
+    console.log(`Backend listening at ${port}`);
+    console.log(`Injected environment variables:`);
+    console.log(`   LOG_LEVEL: ${process.env.LOG_LEVEL}`);
+    console.log(`   MY_RDS_PASSWORD: ${process.env.MY_RDS_PASSWORD}`);
 });
